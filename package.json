@@ -2,6 +2,10 @@
   "name": "feedback-app",
   "version": "1.0.0",
   "scripts": {
-    "start": "npx serve -s ."
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "@azure/cosmos": "^4.0.0"
   }
 }
