@@ -1,28 +1,15 @@
-const express = require('express');
-const { CosmosClient } = require('@azure/cosmos');
-const path = require('path');
-const app = express();
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Connexion à Cosmos DB (Azure remplira ces infos tout seul plus tard)
-const endpoint = process.env.COSMOS_ENDPOINT;
-const key = process.env.COSMOS_KEY;
-const client = new CosmosClient({ endpoint, key });
-
-// Afficher votre page HTML
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Recevoir le formulaire et l'envoyer à Cosmos DB
-app.post('/api/feedback', async (req, res) => {
-    const { email, message } = req.body;
-    const container = client.database("feedback").container("messages");
-    await container.items.create({ id: Date.now().toString(), email, message });
-    res.send("<h1>Merci ! Votre message a été enregistré.</h1><a href='/'>Retour</a>");
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Serveur prêt sur le port ${port}`));
+res.send(`
+    <html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>body { background-color: #f4f7f6; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }</style>
+    </head>
+    <body>
+        <div class="text-center p-5 shadow rounded bg-white">
+            <h1 class="text-success">✅ Merci !</h1>
+            <p>Votre feedback a été enregistré avec succès dans Cosmos DB.</p>
+            <a href="/" class="btn btn-outline-primary">Envoyer un autre message</a>
+        </div>
+    </body>
+    </html>
+`);
